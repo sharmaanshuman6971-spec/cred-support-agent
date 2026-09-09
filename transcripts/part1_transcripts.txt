@@ -1,0 +1,225 @@
+=== Task 1: dataset.py output ===
+Total records: 60
+
+Count per category:
+  Personal Loan: 10
+  Home Loan: 10
+  Auto Loan: 9
+  Education Loan: 12
+  Business Loan: 19
+
+Count per status:
+  Submitted: 11
+  Under Review: 18
+  Approved: 14
+  Rejected: 7
+  Disbursed: 10
+
+Flagged for fraud review: 8/60 = 13.3%
+
+All structural thresholds satisfied.
+
+Sample records:
+{'record_id': 'LN0001', 'category': 'Education Loan', 'status': 'Submitted', 'loan_amount_inr': 2357000, 'days_since_created': 7, 'flagged_for_fraud_review': False}
+{'record_id': 'LN0002', 'category': 'Education Loan', 'status': 'Approved', 'loan_amount_inr': 4625000, 'days_since_created': 2, 'flagged_for_fraud_review': False}
+{'record_id': 'LN0003', 'category': 'Personal Loan', 'status': 'Submitted', 'loan_amount_inr': 2002000, 'days_since_created': 16, 'flagged_for_fraud_review': False}
+
+=== Task 2: documents.py output ===
+
+Total KB documents: 12
+  KB001 | loan_eligibility_criteria | ~4 sentences
+  KB002 | emi_calculation_rules | ~4 sentences
+  KB003 | credit_card_fee_structure | ~4 sentences
+  KB004 | kyc_document_requirements | ~4 sentences
+  KB005 | fraud_dispute_resolution_process | ~4 sentences
+  KB006 | account_closure_process | ~4 sentences
+  KB007 | interest_rate_slabs | ~4 sentences
+  KB008 | prepayment_penalty_rules | ~4 sentences
+  KB009 | minimum_balance_requirements | ~4 sentences
+  KB010 | credit_score_impact_factors | ~4 sentences
+  KB011 | joint_account_rules | ~4 sentences
+  KB012 | nri_account_eligibility | ~4 sentences
+
+  === Task 3: chunking.py output ===
+
+  Fixed-size-with-overlap: 42 chunks from 12 documents
+Sentence-based: 24 chunks from 12 documents
+
+Sample fixed-size chunk:
+{'chunk_id': 'KB001_fixed_0', 'doc_id': 'KB001', 'topic': 'loan_eligibility_criteria', 'text': 'Personal loan applicants must be salaried or self-employed individuals aged 21 to 58 with a minimum monthly income of INR 25,000. Home loan eligibility requires a stable income history of at least two years and a loan-to'}
+
+Sample sentence-based chunk:
+{'chunk_id': 'KB001_sent_0', 'doc_id': 'KB001', 'topic': 'loan_eligibility_criteria', 'text': "Personal loan applicants must be salaried or self-employed individuals aged 21 to 58 with a minimum monthly income of INR 25,000. Home loan eligibility requires a stable income history of at least two years and a loan-to-value ratio not exceeding 80% of the property's assessed value."}
+
+=== Task 4: indexer.py output ===
+
+Building embeddings and indexing into ChromaDB (this may take ~30s)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 3490.68it/s]
+
+Fixed-size collection count: 42
+Sentence-based collection count: 24
+
+Sample query: 'What documents do I need for KYC?'
+
+-- Fixed-size collection results --
+  [0.530] KB011 | ccount opening. All KYC documents must be submitted independently by each joint ...
+  [0.501] KB004 | Every applicant must submit one valid government-issued photo identity proof, su...
+  [0.480] KB011 | Joint accounts can be opened by up to four individuals, with the operating mode ...
+
+-- Sentence-based collection results --
+  [0.475] KB011 | Joint accounts can be opened by up to four individuals, with the operating mode ...
+  [0.471] KB004 | Every applicant must submit one valid government-issued photo identity proof, su...
+  [0.339] KB004 | Self-employed applicants must additionally provide proof of business registratio...
+
+=== Task 5: retrieval.py output ===
+
+Indexing knowledge base (fixed-size + sentence-based collections)...
+
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 2756.51it/s]
+Calibrating 'I don't know' threshold empirically...
+
+In-scope queries (should retrieve relevant policy content):
+  [0.530] What documents do I need for KYC?
+  [0.787] What is the interest rate for a home loan?
+  [0.578] How is EMI calculated?
+  [0.546] What happens if my account falls below the minimum balance?
+  [0.488] How do I dispute a fraudulent transaction on my card?
+
+Out-of-scope queries (should NOT match anything relevant):
+  [0.130] What is the weather like in Mumbai today?
+  [0.101] Can you recommend a good recipe for chicken biryani?
+
+Clusters are cleanly separated (lowest in-scope=0.488 > highest out-of-scope=0.130).
+
+==> Calibrated threshold: 0.309
+
+======================================================================
+DEMONSTRATION: >=5 in-scope queries + 1 deliberately out-of-scope query
+======================================================================
+
+Query: What documents do I need for KYC?
+Top-1 similarity: 0.530 | Grounded: True
+Answer: ccount opening. All KYC documents must be submitted independently by each joint holder before the account is activated. For joint loan applications, the credit assessment considers the combined income...
+Sources: [{'doc_id': 'KB011', 'chunk_id': 'KB011_fixed_1'}, {'doc_id': 'KB004', 'chunk_id': 'KB004_fixed_0'}, {'doc_id': 'KB011', 'chunk_id': 'KB011_fixed_0'}]
+
+Query: What is the interest rate for a home loan?
+Top-1 similarity: 0.787 | Grounded: True
+Answer: Personal loan interest rates range from 10.5% to 24% per annum depending on the applicant's credit score and income stability. Home loans are offered at 8.5% to 11% per annum, with lower rates reserve...
+Sources: [{'doc_id': 'KB007', 'chunk_id': 'KB007_fixed_0'}, {'doc_id': 'KB007', 'chunk_id': 'KB007_fixed_1'}, {'doc_id': 'KB008', 'chunk_id': 'KB008_fixed_0'}]
+
+Query: How is EMI calculated?
+Top-1 similarity: 0.578 | Grounded: True
+Answer: The Equated Monthly Installment is calculated using the reducing balance method, where interest is charged only on the outstanding principal for each period. The standard formula applied is EMI = P x ...
+Sources: [{'doc_id': 'KB002', 'chunk_id': 'KB002_fixed_0'}, {'doc_id': 'KB002', 'chunk_id': 'KB002_fixed_1'}, {'doc_id': 'KB002', 'chunk_id': 'KB002_fixed_2'}]
+
+Query: What happens if my account falls below the minimum balance?
+Top-1 similarity: 0.546 | Grounded: True
+Answer: m balance requirements for as long as the linkage remains active. Senior citizen accounts carry a reduced minimum balance requirement of INR 2,500 across all locations. Regular savings accounts must m...
+Sources: [{'doc_id': 'KB009', 'chunk_id': 'KB009_fixed_2'}, {'doc_id': 'KB009', 'chunk_id': 'KB009_fixed_0'}, {'doc_id': 'KB006', 'chunk_id': 'KB006_fixed_0'}]
+
+Query: How do I dispute a fraudulent transaction on my card?
+Top-1 similarity: 0.488 | Grounded: True
+Answer: the affected card or account is blocked and reissued. Members who notice an unauthorized transaction must report it within three days of the transaction date to be eligible for zero-liability protecti...
+Sources: [{'doc_id': 'KB005', 'chunk_id': 'KB005_fixed_3'}, {'doc_id': 'KB005', 'chunk_id': 'KB005_fixed_0'}, {'doc_id': 'KB005', 'chunk_id': 'KB005_fixed_2'}]
+
+Query: What is the weather like in Mumbai today?
+Top-1 similarity: 0.130 | Grounded: False
+Answer: I don't have enough information in the knowledge base to answer that confidently. Could you rephrase, or ask about a Cred policy topic such as loan eligibility, EMI, KYC, fraud disputes, or account ru...
+
+=== Task 6: evaluation.py output ===
+
+Indexing knowledge base (fixed-size + sentence-based collections)...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 3447.80it/s]
+
+======================================================================
+Evaluating: FIXED-SIZE-WITH-OVERLAP collection
+======================================================================
+
+Query: What documents do I need for KYC?
+  Retrieved (deduped) doc_ids: ['KB004', 'KB011']
+  Relevant doc_ids (ground truth): ['KB004']
+  Relevant retrieved: ['KB004']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: What is the interest rate for a home loan?
+  Retrieved (deduped) doc_ids: ['KB008', 'KB007']
+  Relevant doc_ids (ground truth): ['KB007']
+  Relevant retrieved: ['KB007']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: How is EMI calculated?
+  Retrieved (deduped) doc_ids: ['KB002']
+  Relevant doc_ids (ground truth): ['KB002']
+  Relevant retrieved: ['KB002']
+  Precision@3 = 1/1 = 1.000
+  Recall@3 = 1/1 = 1.000
+
+Query: What happens if my account falls below the minimum balance?
+  Retrieved (deduped) doc_ids: ['KB006', 'KB009']
+  Relevant doc_ids (ground truth): ['KB009']
+  Relevant retrieved: ['KB009']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: How do I dispute a fraudulent transaction on my card?
+  Retrieved (deduped) doc_ids: ['KB005']
+  Relevant doc_ids (ground truth): ['KB005']
+  Relevant retrieved: ['KB005']
+  Precision@3 = 1/1 = 1.000
+  Recall@3 = 1/1 = 1.000
+
+FIXED-SIZE-WITH-OVERLAP collection AVERAGES -> Precision@3: 0.700 | Recall@3: 1.000
+
+======================================================================
+Evaluating: SENTENCE-BASED collection
+======================================================================
+
+Query: What documents do I need for KYC?
+  Retrieved (deduped) doc_ids: ['KB004', 'KB011']
+  Relevant doc_ids (ground truth): ['KB004']
+  Relevant retrieved: ['KB004']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: What is the interest rate for a home loan?
+  Retrieved (deduped) doc_ids: ['KB008', 'KB007']
+  Relevant doc_ids (ground truth): ['KB007']
+  Relevant retrieved: ['KB007']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: How is EMI calculated?
+  Retrieved (deduped) doc_ids: ['KB002', 'KB012']
+  Relevant doc_ids (ground truth): ['KB002']
+  Relevant retrieved: ['KB002']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: What happens if my account falls below the minimum balance?
+  Retrieved (deduped) doc_ids: ['KB006', 'KB009']
+  Relevant doc_ids (ground truth): ['KB009']
+  Relevant retrieved: ['KB009']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+Query: How do I dispute a fraudulent transaction on my card?
+  Retrieved (deduped) doc_ids: ['KB005', 'KB006']
+  Relevant doc_ids (ground truth): ['KB005']
+  Relevant retrieved: ['KB005']
+  Precision@3 = 1/2 = 0.500
+  Recall@3 = 1/1 = 1.000
+
+SENTENCE-BASED collection AVERAGES -> Precision@3: 0.500 | Recall@3: 1.000
+
+======================================================================
+FINAL COMPARISON
+======================================================================
+Fixed-size    -> Precision@3: 0.700 | Recall@3: 1.000
+Sentence-based -> Precision@3: 0.500 | Recall@3: 1.000
+
+Recommendation: deploy the 'fixed-size-with-overlap' strategy, based on the precision/recall numbers measured above.

@@ -1,0 +1,123 @@
+=== Task 14: MCP server startup ===
+
+Starting MCP server on http://127.0.0.1:8000/mcp ...
+Leave this running, then run 'python mcp/client.py' in a separate terminal.
+
+
+                                              ╭──────────────────────────────────────────────────────────────────────────────╮                                               
+                                              │                                                                              │                                               
+                                              │                                                                              │                                               
+                                              │                         ▄▀▀ ▄▀█ █▀▀ ▀█▀ █▀▄▀█ █▀▀ █▀█                        │                                               
+                                              │                         █▀  █▀█ ▄▄█  █  █ ▀ █ █▄▄ █▀▀                        │                                               
+                                              │                                                                              │                                               
+                                              │                                                                              │                                               
+                                              │                                                                              │                                               
+                                              │                                FastMCP 4.0.1                                 │                                               
+                                              │                            https://gofastmcp.com                             │                                               
+                                              │                                                                              │                                               
+                                              │                🖥  Server:      Cred Loan Status Server, 4.0.1                │                                               
+                                              │                🚀 Deploy free: https://horizon.prefect.io                    │                                               
+                                              │                                                                              │                                               
+                                              ╰──────────────────────────────────────────────────────────────────────────────╯                                               
+                                              ╭──────────────────────────────────────────────────────────────────────────────╮                                               
+                                              │                          🎉 Update available: 4.0.2                          │                                               
+                                              │                      Run: pip install --upgrade fastmcp                      │                                               
+                                              ╰──────────────────────────────────────────────────────────────────────────────╯                                               
+
+
+[09/03/26 23:20:46] INFO     Starting MCP server 'Cred Loan Status Server' with transport 'http' on http://127.0.0.1:8000/mcp                                transport.py:363
+INFO:     Started server process [18732]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:52442 - "GET /mcp HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:52442 - "GET /favicon.ico HTTP/1.1" 404 Not Found
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [18732]
+Traceback (most recent call last):
+
+--- MCP tool call: record_id=LN0001 ---
+Standardized MCP response: CallToolResult(content=[TextContent(type='text', text='{"record_id":"LN0001","found":true,"status":"Submitted","loan_amount_inr":2357000,"escalation_score":0.07,"recommend_escalation":false,"flagged_for_fraud_review":false,"days_since_created":7}', annotations=None, meta=None)], structured_content={'record_id': 'LN0001', 'found': True, 'status': 'Submitted', 'loan_amount_inr': 2357000, 'escalation_score': 0.07, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 7}, meta={'io.modelcontextprotocol/serverInfo': {'name': 'Cred Loan Status Server', 'version': '4.0.1'}}, data={'record_id': 'LN0001', 'found': True, 'status': 'Submitted', 'loan_amount_inr': 2357000, 'escalation_score': 0.07, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 7}, is_error=False)
+
+--- MCP tool call: record_id=LN0002 ---
+Standardized MCP response: CallToolResult(content=[TextContent(type='text', text='{"record_id":"LN0002","found":true,"status":"Approved","loan_amount_inr":4625000,"escalation_score":0.02,"recommend_escalation":false,"flagged_for_fraud_review":false,"days_since_created":2}', annotations=None, meta=None)], structured_content={'record_id': 'LN0002', 'found': True, 'status': 'Approved', 'loan_amount_inr': 4625000, 'escalation_score': 0.02, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 2}, meta={'io.modelcontextprotocol/serverInfo': {'name': 'Cred Loan Status Server', 'version': '4.0.1'}}, data={'record_id': 'LN0002', 'found': True, 'status': 'Approved', 'loan_amount_inr': 4625000, 'escalation_score': 0.02, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 2}, is_error=False)
+
+--- MCP tool call: record_id=LN0005 ---
+Standardized MCP response: CallToolResult(content=[TextContent(type='text', text='{"record_id":"LN0005","found":true,"status":"Rejected","loan_amount_inr":105000,"escalation_score":0.24,"recommend_escalation":false,"flagged_for_fraud_review":false,"days_since_created":24}', annotations=None, meta=None)], structured_content={'record_id': 'LN0005', 'found': True, 'status': 'Rejected', 'loan_amount_inr': 105000, 'escalation_score': 0.24, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 24}, meta={'io.modelcontextprotocol/serverInfo': {'name': 'Cred Loan Status Server', 'version': '4.0.1'}}, data={'record_id': 'LN0005', 'found': True, 'status': 'Rejected', 'loan_amount_inr': 105000, 'escalation_score': 0.24, 'recommend_escalation': False, 'flagged_for_fraud_review': False, 'days_since_created': 24}, is_error=False)
+
+Successfully called the tool via MCP for 3 different record IDs.
+
+=== Task 15: checkpointing.py output ===
+
+(Removed existing C:\Users\anshu\Desktop\cred-support-agent\resilience\checkpoints.sqlite for a clean demo run)
+
+======================================================================
+STEP (a)+(b): First invoke on thread_id='demo-checkpoint-thread-1'
+Expect: classify_intent + rag_node execute, then run STOPS
+(interrupted before format_response)
+======================================================================
+  [NODE EXECUTED] classify_intent
+  [NODE EXECUTED] rag_node
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 3267.88it/s]
+Calibrating 'I don't know' threshold empirically...
+
+In-scope queries (should retrieve relevant policy content):
+  [0.530] What documents do I need for KYC?
+  [0.787] What is the interest rate for a home loan?
+  [0.578] How is EMI calculated?
+  [0.546] What happens if my account falls below the minimum balance?
+  [0.488] How do I dispute a fraudulent transaction on my card?
+
+Out-of-scope queries (should NOT match anything relevant):
+  [0.130] What is the weather like in Mumbai today?
+  [0.101] Can you recommend a good recipe for chicken biryani?
+
+Clusters are cleanly separated (lowest in-scope=0.488 > highest out-of-scope=0.130).
+
+==> Calibrated threshold: 0.309
+
+
+State after interrupt: intent=policy_question, final_response=None
+Confirmed: final_response is None -- format_response did NOT run yet, run is paused at the checkpoint.
+
+======================================================================
+STEP (c): Resuming SAME thread_id='demo-checkpoint-thread-1' with input=None
+Expect: ONLY 'format_response' prints [NODE EXECUTED] this time.
+classify_intent and rag_node should NOT print again -- their
+results are loaded from the SQLite checkpoint, not re-executed.
+======================================================================
+  [NODE EXECUTED] format_response
+
+Final state after resume: {'type': 'policy_answer', 'query': 'What documents do I need for KYC?', 'answer': "ccount opening. All KYC documents must be submitted independently by each joint holder before the account is activated. For joint loan applications, the credit assessment considers the combined income and credit history Every applicant must submit one valid government-issued photo identity proof, such as a PAN card, Aadhaar card, passport, or voter ID. Address proof documents accepted include utility billsnot older than three months, a Joint accounts can be opened by up to four individuals, with the operating mode chosen as either 'either or survivor', 'jointly', or 'former or survivor' at the time of account opening. All KYC documents must be submitte", 'grounded': True, 'sources': [{'doc_id': 'KB011', 'chunk_id': 'KB011_fixed_1'}, {'doc_id': 'KB004', 'chunk_id': 'KB004_fixed_0'}, {'doc_id': 'KB011', 'chunk_id': 'KB011_fixed_0'}]}
+
+Confirmed: run completed successfully after resuming from the checkpoint, without re-running classify_intent or rag_node.
+
+SQLite checkpoint file created at: C:\Users\anshu\Desktop\cred-support-agent\resilience\checkpoints.sqlite
+
+=== Task 16: timeouts_retries.py output ===
+
+======================================================================
+(a) RETRY POLICY: recovering from a simulated transient failure
+    Config: initial_interval=0.3s, backoff_factor=2.0, max_interval=5.0s, max_attempts=5, jitter=True
+======================================================================
+    flaky_node attempt #1
+    flaky_node attempt #2
+    flaky_node attempt #3
+
+Final result: {'result': 'success after retries'}
+Total attempts made: 3 (recovered within max_attempts=5)
+
+======================================================================
+(b) PER-NODE TIMEOUT: node sleeps 3.0s, node timeout=1.0s
+======================================================================
+
+CLEAN TIMEOUT ERROR fired (not a hang): NodeTimeoutError: Node 'slow_async_node' exceeded its run timeout of 1.000s (elapsed: 1.076s).
+
+======================================================================
+(c) GLOBAL TIMEOUT: 2 nodes x 1.5s each = 3.0s total, global budget=2.0s
+======================================================================
+
+GLOBAL TIMEOUT fired cleanly: total run time exceeded 2.0s and the whole run was cancelled.

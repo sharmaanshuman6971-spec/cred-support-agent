@@ -1,0 +1,26 @@
+[
+  {
+    "timestamp": "2026-09-09T02:19:30.878963+00:00",
+    "query": "What documents do I need for KYC?",
+    "response": {
+      "type": "policy_answer",
+      "query": "What documents do I need for KYC?",
+      "answer": "ccount opening. All KYC documents must be submitted independently by each joint holder before the account is activated. For joint loan applications, the credit assessment considers the combined income and credit history Every applicant must submit one valid government-issued photo identity proof, such as a PAN card, Aadhaar card, passport, or voter ID. Address proof documents accepted include utility bills not older than three months, a Joint accounts can be opened by up to four individuals, with the operating mode chosen as either 'either or survivor', 'jointly', or 'former or survivor' at the time of account opening. All KYC documents must be submitte",
+      "grounded": true,
+      "sources": [
+        {
+          "doc_id": "KB011",
+          "chunk_id": "KB011_fixed_1"
+        },
+        {
+          "doc_id": "KB004",
+          "chunk_id": "KB004_fixed_0"
+        },
+        {
+          "doc_id": "KB011",
+          "chunk_id": "KB011_fixed_0"
+        }
+      ]
+    }
+  }
+]

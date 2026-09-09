@@ -1,0 +1,10 @@
+langgraph
+langgraph-checkpoint-sqlite
+langchain-core
+chromadb
+sentence-transformers
+fastapi
+uvicorn
+pydantic>=2.9
+fastmcp
+python-dotenv>=1.1.0

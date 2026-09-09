@@ -1,0 +1,18 @@
+[
+  {
+    "timestamp": "2026-09-03T17:36:15.696302+00:00",
+    "query": "What is the interest rate for a home loan?",
+    "response": {
+      "type": "policy_answer",
+      "answer": "Home loans: 8.5%-11% p.a."
+    }
+  },
+  {
+    "timestamp": "2026-09-03T17:36:15.709036+00:00",
+    "query": "And what about auto loans?",
+    "response": {
+      "type": "policy_answer",
+      "answer": "Auto loans: 9%-14% p.a."
+    }
+  }
+]

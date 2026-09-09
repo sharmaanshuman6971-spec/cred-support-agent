@@ -1,0 +1,71 @@
+=== Task 11: FastAPI /ask endpoint test ===
+
+
+INFO:     Started server process [3444]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [3444]
+
+=== Task 12: logging_utils.py output ===
+
+Demo: logging a request that contains raw PII
+{'trace_id': '29717b23-1499-4a39-bbf9-bbd085c299a0', 'timestamp': '2026-09-03T17:47:04.348007+00:00', 'endpoint': '/ask', 'request_text_masked': 'What is my loan status? MyPAN is [PAN_REDACTED].', 'pii_was_masked': True, 'response_summary': {'type': 'status_lookup', 'status': 'Approved'}, 'duration_ms': 142.7}
+
+Verifying the raw PAN never landed in the log file unmasked...
+Confirmed: PAN is NOT present in the logged (masked) request text.
+
+Total log entries so far: 2
+
+=== Task 13: rag_triad_eval.py output ===
+
+Indexing knowledge base...
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 103/103 [00:00<00:00, 3299.40it/s]
+Calibrating 'I don't know' threshold empirically...
+
+In-scope queries (should retrieve relevant policy content):
+  [0.530] What documents do I need for KYC?
+  [0.787] What is the interest rate for a home loan?
+  [0.578] How is EMI calculated?
+  [0.546] What happens if my account falls below the minimum balance?
+  [0.488] How do I dispute a fraudulent transaction on my card?
+
+Out-of-scope queries (should NOT match anything relevant):
+  [0.130] What is the weather like in Mumbai today?
+  [0.101] Can you recommend a good recipe for chicken biryani?
+
+Clusters are cleanly separated (lowest in-scope=0.488 > highest out-of-scope=0.130).
+
+==> Calibrated threshold: 0.309
+
+
+Running RAG triad evaluation on 15 queries (covers all 12 required topics + 3 out-of-scope/edge-case queries)...
+
+Query                                                    Ctx.Rel   Ground  Ans.Rel
+----------------------------------------------------------------------------------
+What are the eligibility criteria for a personal loa...    0.799    0.799    0.738
+How is EMI calculated?                                     0.578    0.578    0.454
+What is the annual fee structure for credit cards?         0.647    0.647    0.621
+What documents do I need for KYC?                          0.530    0.530    0.545
+How do I dispute a fraudulent transaction on my card...    0.488    0.488    0.535
+What is the process to close my account?                   0.526    0.526    0.614
+What is the interest rate for a home loan?                 0.787    0.787    0.712
+Is there a penalty for prepaying my loan early?            0.631    0.631    0.701
+What happens if my account falls below the minimum b...    0.546    0.546    0.576
+What factors affect my credit score?                       0.597    0.597    0.602
+What are the rules for opening a joint account?            0.594    0.594    0.637
+Am I eligible to open an NRI account?                      0.704    0.704    0.733
+What is the weather like in Mumbai today?                  0.130    1.000    0.000
+Can you recommend a good recipe for chicken biryani?       0.101    1.000    0.000
+asdkj qlwkejasd 12345 random gibberish                     0.177    1.000    0.018
+----------------------------------------------------------------------------------
+AVERAGES                                                   0.522    0.695    0.499
+
+Final averages across all 15 queries:
+  Context Relevance : 0.522
+  Groundedness      : 0.695
+  Answer Relevance  : 0.499
